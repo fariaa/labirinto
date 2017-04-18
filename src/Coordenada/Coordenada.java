@@ -11,7 +11,15 @@ public class Coordenada {
     
             
     public Coordenada()
-    {}
+    {
+        
+    }
+    
+    public Coordenada(int linha, int coluna)
+    {
+        this.linha = linha;
+        this.coluna = coluna;
+    }
 
     public void setLinha(int linha) {
         this.linha = linha;

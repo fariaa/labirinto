@@ -9,28 +9,38 @@ public class Principal {
     
     public static void main(String[] args)
     {
-       //Pilha<Coordenada> caminho;
-       //Pilha<Fila<Coordenada>> possibilidades;
-       //Fila<Coordenada> fila;
+       Pilha<Coordenada> caminho;
+       Pilha<Fila<Coordenada>> possibilidades;
+       Fila<Coordenada> fila;
        Labirinto labirinto;
        
        try
        {
-           //caminho = new Pilha <Coordenada> (40);
-           //possibilidades = new Pilha <Fila<Coordenada>>(40);
            labirinto = new Labirinto(); 
+           caminho = new Pilha <Coordenada> (labirinto.getLinha() * labirinto.getColuna());
+           possibilidades = new Pilha <Fila<Coordenada>>(labirinto.getLinha() * labirinto.getColuna());
            labirinto.toString();
-           Coordenada c = labirinto.getEntrada();
-           System.out.println("Entrada, linha: " + c.getLinha() + ", coluna: " + c.getColuna());
-           //fila = new Fila<Coordenada>(3);
-           //Coordenada atual = labirinto.getEntrada();
-           //fila = labirinto.posicoesAdj(atual);
+           Coordenada atual = labirinto.getEntrada();
            
-          // Crdenada saida = labirinto.getSaida();oo
+           Coordenada entrada = labirinto.getEntrada();
+           Coordenada saida = labirinto.getSaida();
+           System.out.println("Entrada, linha: " + entrada.getLinha() + ", coluna: " + entrada.getColuna());
+           System.out.println("Saida, linha: " + saida.getLinha() + ", coluna: " + saida.getColuna());
+           
+           do
+           {
+                labirinto.progressivo(atual, possibilidades, caminho);
+                fila = new Fila<Coordenada>(3);
+                fila = possibilidades.remove();
+                labirinto.regressiva(fila, atual, caminho, possibilidades);
+                atual = fila.remove();
+           }
+           while(labirinto.getIsSaidaEncontrada());
+                  
        }
        catch(Exception ex)
        {
-           System.out.println(ex.getMessage());
+           System.out.println("MSG: " + ex.getMessage());
        }
         
     }

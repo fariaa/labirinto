@@ -22,8 +22,8 @@ public class Pilha <X> implements Cloneable {
     
     public void guarde(X x) throws Exception
     {
-        if(x == null)
-            throw new Exception("Valor invalido");
+        //if(x == null)
+           // throw new Exception("Valor invalido");
         
         Object elemento = null;
         
