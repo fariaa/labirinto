@@ -1,5 +1,6 @@
 
 import Coordenada.Coordenada;
+import ExceptionAux.SairDoLoopException;
 import Fila.Fila;
 import Labirinto.Labirinto;
 import Pilha.Pilha;
@@ -17,8 +18,9 @@ public class Principal {
        try
        {
            labirinto = new Labirinto(); 
-           caminho = new Pilha <Coordenada> (labirinto.getLinha() * labirinto.getColuna());
-           possibilidades = new Pilha <Fila<Coordenada>>(labirinto.getLinha() * labirinto.getColuna());
+           int tam = labirinto.getTamLinha()* labirinto.getTamColuna();
+           caminho = new Pilha <Coordenada> (tam);
+           possibilidades = new Pilha <Fila<Coordenada>>(labirinto.getTamLinha() * labirinto.getTamColuna());
            labirinto.toString();
            Coordenada atual = labirinto.getEntrada();
            
@@ -29,13 +31,28 @@ public class Principal {
            
            do
            {
-                labirinto.progressivo(atual, possibilidades, caminho);
-                fila = new Fila<Coordenada>(3);
-                fila = possibilidades.remove();
-                labirinto.regressiva(fila, atual, caminho, possibilidades);
-                atual = fila.remove();
+               try
+               {
+                   if(labirinto.progressivo(atual, possibilidades, caminho))
+                   {
+                       atual = labirinto.regressiva(atual, caminho, possibilidades);
+                       labirinto.setPosicao(atual);
+                       caminho.guarde(atual);
+                       System.out.println(labirinto.toString());
+                   }
+                       
+               }
+               catch(SairDoLoopException err)
+               {
+                   System.out.println(err.getMessage());
+                   
+               }
+               catch(Exception ex)
+               {
+                   
+               } 
            }
-           while(labirinto.getIsSaidaEncontrada());
+           while(!labirinto.isSaidaEncontrada());
                   
        }
        catch(Exception ex)

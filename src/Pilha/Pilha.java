@@ -3,8 +3,7 @@ package Pilha;
 import java.lang.reflect.Method;
 
 public class Pilha <X> implements Cloneable {
-    protected static final int TAMANHO_MINIMO = -1;
-    protected int topo = this.TAMANHO_MINIMO;
+    protected int topo = -1;
     protected Object[] pilha;
     protected Object ultimoElemento;
     
@@ -14,7 +13,7 @@ public class Pilha <X> implements Cloneable {
 	
     public Pilha(int capacidade) throws Exception
     {
-        if(capacidade <= this.TAMANHO_MINIMO)
+        if(capacidade <= -1)
             throw new Exception("capacidade invalida");
         
         this.pilha = new Object[capacidade]; 
@@ -22,11 +21,11 @@ public class Pilha <X> implements Cloneable {
     
     public void guarde(X x) throws Exception
     {
-        //if(x == null)
-           // throw new Exception("Valor invalido");
+        if(x == null)
+           throw new Exception("Valor invalido");
         
         Object elemento = null;
-        
+        /*
         if (x instanceof Cloneable)
         {
             Class classe            = x.getClass();
@@ -37,10 +36,11 @@ public class Pilha <X> implements Cloneable {
           
         }
         else
+            */
             elemento = x;
         
 	this.topo++;	
-	this.pilha[this.topo] = elemento;
+	this.pilha[this.topo] = (X)elemento;
     }
     
     public X remove() throws Exception

@@ -23,12 +23,27 @@ public class Fila <X> implements Cloneable {
     {
         if(x == null)
             throw new Exception("Valor invalido");
-
+        
+        if(this.qtd == this.fila.length-1)
+            throw new Exception("Fila está cheia");
+        
         this.fim++;
         this.qtd++;
         
-        //Arrumar para clonar
-        this.fila[this.fim] = x;
+        if (x instanceof Cloneable)
+        {
+          //this.vetor[this.topo] = x.clone();
+            Class classe            = x.getClass();
+            Class<?>[] parmsFormais = null; // = null é desnecessário
+            Method metodo           = classe.getMethod ("clone", parmsFormais);
+            Object[] parmsReais     = null;
+            this.fila[this.fim]   = (X)metodo.invoke(x,parmsReais);
+        }
+        else
+            this.fila[this.fim] = x;
+        
+        if(this.fim == this.fila.length-1 && this.inicio > 0)
+            this.fim = 0;
     }
 
     public X remove() throws Exception
@@ -40,7 +55,10 @@ public class Fila <X> implements Cloneable {
         this.fila[this.inicio] = null;
         this.inicio++;
         this.qtd--;
-
+        
+        if(this.inicio == this.fila.length)
+            this.inicio = 0;
+        
         return (X)ret;
     }
 
@@ -59,9 +77,13 @@ public class Fila <X> implements Cloneable {
         if (modelo==null)
             throw new Exception ("Modelo nao fornecido");
 
+        this.inicio = modelo.inicio;
+        this.fim = modelo.fim;
+        this.qtd = modelo.qtd;
+        
         this.fila = new Object [modelo.fila.length];
 
-        for (int i=0; i<=modelo.qtd; i++)
+        for (int i=0; i <= modelo.qtd; i++)
             if (modelo.fila[i] instanceof Cloneable)
             {
                 Class classe            = modelo.fila[i].getClass();
@@ -73,10 +95,6 @@ public class Fila <X> implements Cloneable {
             }
             else
                 this.fila[i] = modelo.fila[i];
-
-        this.inicio = modelo.inicio;
-        this.fim = modelo.fim;
-        this.qtd = modelo.qtd;
     }
 
 

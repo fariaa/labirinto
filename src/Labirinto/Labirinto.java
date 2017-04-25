@@ -2,6 +2,8 @@
 package Labirinto;
 
 import Coordenada.Coordenada;
+import ExceptionAux.ParametroNuloException;
+import ExceptionAux.SairDoLoopException;
 import Fila.Fila;
 import Pilha.Pilha;
 import java.io.BufferedReader;
@@ -9,7 +11,7 @@ import java.io.FileReader;
 import static java.lang.Integer.parseInt;
 
 
-public class Labirinto {
+public class Labirinto implements Cloneable {
     
     protected int tamLinha;
     protected int tamColuna;
@@ -21,40 +23,46 @@ public class Labirinto {
     protected FileReader lab;
     protected BufferedReader leitor;
     protected boolean isSaidaEncontrada = false;
-    
+   
     public Labirinto() throws Exception
     {
-        this.lerArquivo();
+        this.lerArquivo("C:\\fontes\\labirinto\\lib\\lab2.txt");
         this.lerTamanho();
         this.labirinto = new String[this.tamLinha][this.tamColuna];
         this.modelarMatriz();
-        this.entrada();
-        this.saida();
-        //this.labirinto = new String [][];
+        this.procuraEntrada();
+        this.procuraSaida();
     }
     
-    protected void lerArquivo() throws Exception
+    protected void lerArquivo(String caminho) throws java.io.FileNotFoundException, ParametroNuloException
     {
-        this.lab = new FileReader("C:\\fontes\\labirinto\\lib\\lab.txt");//endereço completo com o nome do arquivo
+        if(caminho == null)
+            throw new ParametroNuloException("o caminho do arquivo, nao pode ser nulo");
+        
+        this.lab = new FileReader(caminho);
         this.leitor = new BufferedReader(lab);
     }
+  
+    public int getTamLinha() {
+        return new Integer(tamLinha);
+    }
+
+    public int getTamColuna() {
+        return new Integer(tamColuna);
+    }
     
-    protected void lerTamanho() throws Exception
+    protected void lerTamanho() throws NumberFormatException, java.io.IOException
     {
         int aux = 1;
         String letra = "";
         while(aux < 3)
         {
             letra = this.leitor.readLine();
-            //System.out.println(letra);
             if(aux == 1)
-            {
                 this.tamLinha = parseInt(letra.toString());
-            }
             if(aux == 2)
-            {
                 this.tamColuna = parseInt(letra.toString());
-            }
+            
             aux++;
         }
     }
@@ -75,7 +83,7 @@ public class Labirinto {
         }
     }
     
-    protected void entrada() throws Exception
+    protected void procuraEntrada() throws Exception
     {
         int cont = 0;
         Coordenada ret = new Coordenada();
@@ -113,13 +121,13 @@ public class Labirinto {
     }
 
     public int getLinha() {
-        return linha;
+        return new Integer(linha);
     }
 
     public int getColuna() {
-        return coluna;
+        return new Integer(coluna);
     }
-    protected void saida() throws Exception
+    protected void procuraSaida() throws Exception
     {
         int cont = 0;
         Coordenada ret = new Coordenada();
@@ -157,55 +165,160 @@ public class Labirinto {
     }
     public Coordenada getEntrada() throws Exception
     {
-        return this.entrada;
+        return this.entrada.clone();
     }
     public Coordenada getSaida() throws Exception
     {
-        return this.saida;
+        return this.saida.clone();
     }
+    
+    public boolean isSaidaEncontrada()
+    {
+        return this.isSaidaEncontrada;
+    }
+    
     public Fila<Coordenada> posicoesAdj(Coordenada atual) throws Exception
     {
-        //pegar a posição de cima
-        //pegar a posição de frente
-        //pegar a posição de baixo
         Fila<Coordenada> fila = new Fila<Coordenada>(3);
-        
-        if(!(atual.getColuna()+1 > this.tamColuna-1))
+        //posição da frente
+        if(atual.getColuna()+1 <= this.tamColuna-1)
         {
-            if(!(this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("#")))
+            if(!(this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("#") 
+               || this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("*")))
                 fila.insere(new Coordenada(atual.getLinha(), atual.getColuna()+1));
         }
-        
-        if(atual.getLinha()-1 > 0 && atual.getLinha()-1 < this.linha-1)
+        //posição de cima
+        if(atual.getLinha()-1 <= this.tamLinha-1)
         {
-            if(!(this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("#")))
+            if(!(this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("#")
+               || this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("*")))
                 fila.insere(new Coordenada(atual.getLinha()-1, atual.getColuna()));
         }
-        
-        if(atual.getLinha()+1 > 0 && atual.getLinha()+1 < this.linha-1)
+        //posição de baixo
+        if(atual.getLinha()+1 <= this.tamLinha-1)
         {
-            if(!(this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("#")))
+            if(!(this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("#")
+                || this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("*")))
                 fila.insere(new Coordenada(atual.getLinha()+1, atual.getColuna()));
         }
 
         return fila;    
     }
-    public Coordenada retirarCoor(Fila<Coordenada> fila)
-    {
-        return null;
-    }
     
-    protected void setPosicao(Coordenada c) throws Exception
+    public void setPosicao(Coordenada c) throws ArrayIndexOutOfBoundsException, ParametroNuloException, SairDoLoopException
     {
+        if(c == null)
+            throw new ParametroNuloException("Coordenada nao pode estar vazia");
+        
         if(this.labirinto[c.getLinha()][c.getColuna()].equals("S"))
+        {
             this.isSaidaEncontrada = true;
+            throw new SairDoLoopException("achou a saida");
+        }
         
         this.labirinto[c.getLinha()][c.getColuna()] = "*";
     }
     
-    protected void tirarPosicao(Coordenada c) throws Exception
+    protected void tirarPosicao(Coordenada c) throws ArrayIndexOutOfBoundsException, ParametroNuloException
     {
+        if(c == null)
+            throw new ParametroNuloException("Coordenada nao pode estar vazia");
+                    
         this.labirinto[c.getLinha()][c.getColuna()] = " ";
+    }
+    
+    public boolean progressivo(Coordenada atual, Pilha<Fila<Coordenada>> possibilidades, Pilha<Coordenada> caminho) throws Exception
+    {
+        if(atual == null)
+            throw new ParametroNuloException("Coordenada atual nao pode começar vazia");
+        
+        int cont =0;
+        while(atual != null || !(this.isSaidaEncontrada))
+        {
+             Fila fila = new Fila<Coordenada>(3);
+             fila = this.posicoesAdj(atual);
+             if(fila.vazia())
+                 return true;
+             
+             atual = (Coordenada)fila.remove();
+             this.setPosicao(atual);
+             caminho.guarde(atual);
+             possibilidades.guarde(fila);
+             
+             System.out.println("passo: " + cont++);
+             System.out.println(this.toString());
+        }
+        return false;
+    }
+    
+    public Coordenada regressiva(Coordenada atual, Pilha<Coordenada> caminho, Pilha<Fila<Coordenada>> possibilidades) throws Exception
+    {
+        Fila<Coordenada> fila = new Fila<Coordenada>(3);
+        fila = possibilidades.remove();
+        while(fila.vazia())
+        {
+             System.out.println(this.toString());
+             atual = caminho.remove();
+             this.tirarPosicao(atual);
+             fila = possibilidades.remove();
+             
+        }
+        return fila.remove();
+    }
+    
+    public Labirinto(Labirinto modelo) throws Exception
+    {
+        if(modelo == null)
+            throw new ParametroNuloException("Coordenada atual nao pode começar vazia");
+        
+        this.coluna = modelo.coluna;
+        this.entrada = modelo.entrada;
+        this.isSaidaEncontrada = modelo.isSaidaEncontrada;
+        this.lab.equals(modelo.lab);
+        
+        for(int l = 0; l < modelo.tamLinha; l++)
+            for(int c = 0; c < modelo.tamColuna; c++)
+                this.labirinto[l][c].equals(modelo.labirinto[l][c]);
+                
+        this.labirinto.equals(modelo.labirinto);
+        this.leitor.equals(modelo.leitor);
+        this.linha = modelo.linha;
+        this.saida.equals(modelo.saida);
+        this.tamColuna = modelo.tamColuna;
+        this.tamLinha = modelo.tamLinha;
+    }
+    
+    public Object clone()
+    {
+        Labirinto ret = null;
+        try
+        {
+          ret = new Labirinto(this);  
+        }
+        catch(Exception erro)
+        {}
+        
+        return ret;
+    }
+    
+    public int hashCode()
+    {
+        int ret = 999;
+        ret = 7*ret + new Integer(this.tamLinha).hashCode();
+        ret = 7*ret + new Integer (this.tamLinha).hashCode();
+        ret = 7*ret + new Integer (this.linha).hashCode();
+        ret = 7*ret + new Integer (this.coluna).hashCode();
+        ret = 7*ret + this.entrada.hashCode();
+        ret = 7*ret + this.saida.hashCode();
+        ret = 7*ret + this.lab.hashCode();
+        ret = 7*ret + this.leitor.hashCode();
+        ret = 7*ret + new Boolean(this.isSaidaEncontrada).hashCode();
+        
+        for(int l = 0; l < this.tamLinha; l++)
+            for (int c = 0; c < this.tamColuna; c++)
+                ret = 7*ret + this.labirinto[l][c].hashCode();
+     
+        return ret;
     }
     
     public String toString()
@@ -213,41 +326,43 @@ public class Labirinto {
         String ret = "";
         for(int l = 0; l < this.tamLinha; l++){
             for(int c = 0; c < this.tamColuna; c++){
-                ret += "lin: " + l + ", col: " + c + " result: " +this.labirinto[l][c];
+                ret += this.labirinto[l][c];
             }
+            ret += "\n";
         }
         return ret;
     }
     
-    
-    public boolean progressivo(Coordenada atual, Pilha<Fila<Coordenada>> possibilidades, Pilha<Coordenada> caminho) throws Exception
+    public boolean equals(Object obj)
     {
-        while(atual != null || this.isSaidaEncontrada)
+        if(obj == null)
+            return false;
+        if(this == obj)
+            return true;
+        if(this.getClass()!=obj.getClass())
+            return false;
+        
+        Labirinto l = (Labirinto)obj;
+        
+        if(this.tamLinha!=l.tamLinha ||
+           this.tamColuna!=l.tamColuna ||
+           this.linha!=l.linha ||
+           this.linha!=l.coluna ||
+           !this.entrada.equals(l.entrada) ||
+           !this.saida.equals(l.saida) ||
+           !this.lab.equals(l.lab) ||
+           !this.leitor.equals(l.leitor) ||
+           this.isSaidaEncontrada != l.isSaidaEncontrada)
+            return false;
+        
+        for(int lin = 0; lin < this.tamLinha; lin++)
         {
-             Fila fila = new Fila<Coordenada>(3);
-             fila = this.posicoesAdj(atual);
-             atual = (Coordenada)fila.remove();
-             this.setPosicao(atual);
-             caminho.guarde(atual);
-             possibilidades.guarde(fila);
+            for(int c = 0; c < this.tamColuna; c++)
+            {
+                if(!this.labirinto[lin][c].equals(l.labirinto[lin][c]))
+                    return false;
+            }
         }
         return true;
     }
-    
-    public boolean regressiva(Fila<Coordenada> fila, Coordenada atual, Pilha<Coordenada> caminho, Pilha<Fila<Coordenada>> possibilidades) throws Exception
-    {
-        while(fila.vazia())
-        {
-             atual = caminho.remove();
-             this.tirarPosicao(atual);
-             fila = possibilidades.remove();
-        }
-        return true;
-    }
-    
-    public boolean getIsSaidaEncontrada()
-    {
-        return this.isSaidaEncontrada;
-    }
-    
 }
