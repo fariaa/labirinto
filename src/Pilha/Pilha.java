@@ -1,16 +1,29 @@
 package Pilha;
 
 import java.lang.reflect.Method;
-
+/**
+ * Classe serve para armazenar os elementos do labirinto
+ * 
+ * @author Lucas, Daniela e Maiza
+ * @param <X> 
+ */
 public class Pilha <X> implements Cloneable {
     protected int topo = -1;
     protected Object[] pilha;
     protected Object ultimoElemento;
     
+    /**
+     * Construtor default 
+     */
     private Pilha()
     {
     }
-	
+    /**
+     * Construtor que recebe a capacidade da pilha
+     * 
+     * @param capacidade
+     * @throws Exception 
+     */
     public Pilha(int capacidade) throws Exception
     {
         if(capacidade <= -1)
@@ -18,7 +31,12 @@ public class Pilha <X> implements Cloneable {
         
         this.pilha = new Object[capacidade]; 
     }
-    
+    /**
+     * Método que guarda os valores na pilha.
+     * 
+     * @param x 
+     * @throws Exception 
+     */
     public void guarde(X x) throws Exception
     {
         if(x == null)
@@ -42,7 +60,12 @@ public class Pilha <X> implements Cloneable {
 	this.topo++;	
 	this.pilha[this.topo] = (X)elemento;
     }
-    
+    /**
+     * Construtor que remove os valores na pilha
+     * 
+     * @return
+     * @throws Exception 
+     */
     public X remove() throws Exception
     {
         Object item = this.pilha[this.topo];
@@ -54,7 +77,10 @@ public class Pilha <X> implements Cloneable {
 	this.topo--;	
         return (X)item;
     }
-    
+    /**
+     * Construtor que retorna se pilha está vazia 
+     * @return boolean
+     */
     public boolean vazia()
     {
         if(this.pilha[0] == null)
@@ -62,7 +88,11 @@ public class Pilha <X> implements Cloneable {
         
         return false;
     }
-    
+    /**
+     * Metodo que recupera os valores da pilha 
+     * @return
+     * @throws Exception 
+     */
     public X recupera() throws Exception
     {
         if(this.pilha.length == 0)
@@ -70,7 +100,12 @@ public class Pilha <X> implements Cloneable {
         
 	return (X)pilha[this.topo];	
     }
-    
+    /**
+     * Método que retorna se pilha está vazia.
+     * 
+     * @return
+     * @throws Exception 
+     */
     public String toStringElemento() throws Exception
     {
         if(this.topo == -1)
@@ -78,12 +113,20 @@ public class Pilha <X> implements Cloneable {
         
         return (String)this.pilha[this.topo];
     }
-    
+    /**
+     * Método retorna o tamanho da pilha.
+     * 
+     * @return tamanho
+     */
     public int size() 
     {
         return this.pilha.length;
     }
-    
+    /**
+     * Método retorna a pilha.
+     * 
+     * @return pilha
+     */
     public int quantidade() 
     {
         int ret = 0;
@@ -94,7 +137,12 @@ public class Pilha <X> implements Cloneable {
         }
         return ret;
     }
-    
+    /**
+     * Método retorna o último elemento.
+     * 
+     * @return Último elemento
+     * @throws Exception 
+     */
     public X ultimoElementoRemovido() throws Exception
     {
         if(this.ultimoElemento == null)
@@ -102,7 +150,11 @@ public class Pilha <X> implements Cloneable {
         
         return (X)this.ultimoElemento;
     }
-                
+    /**
+     * Método que printa o último elemento da pilha.
+     * 
+     * @return String 
+     */            
     public String toString ()
     {
         String ret = "";
@@ -117,7 +169,12 @@ public class Pilha <X> implements Cloneable {
 
         return ret;
     }
-	
+    /**
+     * Método de comparação.
+     * 
+     * @param obj
+     * @return Boolean
+     */
     public boolean equals (Object obj)
     {
         if (obj==null)
@@ -139,7 +196,11 @@ public class Pilha <X> implements Cloneable {
                 return false;
         return true;
     }
-
+    /**
+     * Método que retorna valores únicos para identificar a classe.
+     * 
+     * @return valor genérico
+     */
     public int hashCode ()
     {
         int ret = 897;
@@ -153,7 +214,12 @@ public class Pilha <X> implements Cloneable {
 
         return ret;
     }
-    
+    /**
+     * Método que auxilia no construtor do clone.
+     * 
+     * @param modelo
+     * @throws Exception 
+     */
     public Pilha (Pilha<X> modelo) throws Exception
     {
         if (modelo==null)
@@ -178,7 +244,10 @@ public class Pilha <X> implements Cloneable {
         this.topo = modelo.topo;
     }
 
-
+    /**
+     * Método que retorna pilha.
+     * @return Pilha
+     */
     public Object clone ()
     {
         Pilha<X> ret=null;

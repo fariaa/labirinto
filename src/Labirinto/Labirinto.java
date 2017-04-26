@@ -10,7 +10,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import static java.lang.Integer.parseInt;
 
-
+/**
+ * Classe de representação genérica de um labirinto.
+ * <br>
+ * 
+ * @author Lucas, Daniela e Maiza.
+ */
 public class Labirinto implements Cloneable {
     
     protected int tamLinha;
@@ -24,9 +29,14 @@ public class Labirinto implements Cloneable {
     protected BufferedReader leitor;
     protected boolean isSaidaEncontrada = false;
    
+    /**
+     * Construtor de inicialização da classe.
+     * 
+     * @throws Exception msg genérica.
+     */
     public Labirinto() throws Exception
     {
-        this.lerArquivo("C:\\fontes\\labirinto\\lib\\lab2.txt");
+        this.lerArquivo("C:\\Users\\13255484\\Desktop\\labirinto.txt");
         this.lerTamanho();
         this.labirinto = new String[this.tamLinha][this.tamColuna];
         this.modelarMatriz();
@@ -34,6 +44,14 @@ public class Labirinto implements Cloneable {
         this.procuraSaida();
     }
     
+    /**
+     * Método interno para ler o arquivo
+     * <p>
+     * Método receberá um valor caminho como parâmetro, onde irá buscar o arquivo.txt que representa o labirínto.
+     * @param caminho valor string
+     * @throws java.io.FileNotFoundException erro caso arquivo esteja errado
+     * @throws ParametroNuloException caso parametro seja nulo, dispara msg de erro.
+     */
     protected void lerArquivo(String caminho) throws java.io.FileNotFoundException, ParametroNuloException
     {
         if(caminho == null)
@@ -42,15 +60,36 @@ public class Labirinto implements Cloneable {
         this.lab = new FileReader(caminho);
         this.leitor = new BufferedReader(lab);
     }
-  
+    
+    /**
+     * Método para retornar o tamanho da linha, que representa a matriz.
+     * <br>
+     * @return valor inteiro
+     */
     public int getTamLinha() {
         return new Integer(tamLinha);
     }
-
+    
+    /**
+     * Método para retornar o tamanho da coluna.
+     * <br>
+     * Representa o tamanho da coluna da matriz.
+     * 
+     * @return valor inteiro
+     */
     public int getTamColuna() {
         return new Integer(tamColuna);
     }
     
+    /**
+     * Método interno para ler o tamanho da matriz.
+     * <br>
+     * No arquivo.txt deve conter duas linhas, onde a primeira linha é o valor de linhas e
+     * a segunda linha representa o número de colunas.
+     * 
+     * @throws NumberFormatException
+     * @throws java.io.IOException 
+     */
     protected void lerTamanho() throws NumberFormatException, java.io.IOException
     {
         int aux = 1;
@@ -67,6 +106,13 @@ public class Labirinto implements Cloneable {
         }
     }
    
+    /**
+     * Método interno que auxilia na montagem da matriz.
+     * <br>
+     * Este método vai modelar a matriz em base com a do arquivo.txt lido
+     * 
+     * @throws Exception 
+     */
     protected void modelarMatriz() throws Exception
     {
         int auxLinha = 0;
@@ -83,6 +129,11 @@ public class Labirinto implements Cloneable {
         }
     }
     
+    /**
+     * Método interno paa procurar a entrada do labirinto
+     * <br>
+     * @throws Exception 
+     */
     protected void procuraEntrada() throws Exception
     {
         int cont = 0;
@@ -122,14 +173,30 @@ public class Labirinto implements Cloneable {
         
         this.entrada = ret;
     }
-
+    
+    /**
+     * Método para retornar a linha
+     * 
+     * @return valor inteiro
+     */
     public int getLinha() {
         return new Integer(linha);
     }
-
+    
+    /**
+     * Método para retornar a coluna
+     * 
+     * @return valor inteiro 
+     */
     public int getColuna() {
         return new Integer(coluna);
     }
+    
+    /**
+     * Método interno para encontrar a saída do labirinto.
+     * <br>
+     * @throws Exception 
+     */
     protected void procuraSaida() throws Exception
     {
         int cont = 0;
@@ -168,48 +235,102 @@ public class Labirinto implements Cloneable {
             throw new Exception("saida nao encontrada \n");
         this.saida = ret;
     }
+    
+    /**
+     * Método retorna a coordenada de entrada do labirinto.
+     * 
+     * @return uma classe coordenada
+     * @throws Exception 
+     */
     public Coordenada getEntrada() throws Exception
     {
         return this.entrada.clone();
     }
+    
+    /**
+     * Método retorna a coordenada de saída do labirinto.
+     * 
+     * @return uma classe coordenada
+     * @throws Exception 
+     */
     public Coordenada getSaida() throws Exception
     {
         return this.saida.clone();
     }
     
+    /**
+     * Método retorna true caso tenha encontado a saída e false caso contráio.
+     * 
+     * @return valor booleano
+     */
     public boolean isSaidaEncontrada()
     {
         return this.isSaidaEncontrada;
     }
     
+    /**
+     * Método para verificar as coordenadas adjascentes da coordenada atual.
+     * 
+     * @param atual coodenada atual
+     * @return fila de coordenada
+     * @throws Exception mensagem genérica
+     */
     public Fila<Coordenada> posicoesAdj(Coordenada atual) throws Exception
     {
         Fila<Coordenada> fila = new Fila<Coordenada>(3);
         //posição da frente
-        if(atual.getColuna()+1 <= this.tamColuna-1)
+        try
         {
-            if(!(this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("#") 
-               || this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("*")))
-                fila.insere(new Coordenada(atual.getLinha(), atual.getColuna()+1));
+            if(atual.getColuna()+1 <= this.tamColuna-1)
+            {
+                if(!(this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("#") 
+                   || this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("*")))
+                    fila.insere(new Coordenada(atual.getLinha(), atual.getColuna()+1));
+            }
+        }
+        catch(Exception erro)
+        {
+            
         }
         //posição de cima
-        if(atual.getLinha()-1 <= this.tamLinha-1)
+        try
         {
-            if(!(this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("#")
-               || this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("*")))
-                fila.insere(new Coordenada(atual.getLinha()-1, atual.getColuna()));
+            if(atual.getLinha()-1 <= this.tamLinha-1)
+            {
+                if(!(this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("#")
+                   || this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("*")))
+                    fila.insere(new Coordenada(atual.getLinha()-1, atual.getColuna()));
+            }
+        }
+        catch(Exception erro)
+        {
+            
         }
         //posição de baixo
-        if(atual.getLinha()+1 <= this.tamLinha-1)
+        try
         {
-            if(!(this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("#")
-                || this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("*")))
-                fila.insere(new Coordenada(atual.getLinha()+1, atual.getColuna()));
+            if(atual.getLinha()+1 <= this.tamLinha-1)
+            {
+                if(!(this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("#")
+                    || this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("*")))
+                    fila.insere(new Coordenada(atual.getLinha()+1, atual.getColuna()));
+            }
         }
-
+        catch(Exception erro)
+        {
+            
+        }
         return fila;    
     }
     
+    /**
+     * Método setará o valor * na coordenada passada como parâmetro.
+     * 
+     * @param c
+     * @throws ArrayIndexOutOfBoundsException
+     * @throws ParametroNuloException
+     * @throws SairDoLoopException 
+     */
     public void setPosicao(Coordenada c) throws ArrayIndexOutOfBoundsException, ParametroNuloException, SairDoLoopException
     {
         if(c == null)
@@ -224,6 +345,13 @@ public class Labirinto implements Cloneable {
         this.labirinto[c.getLinha()][c.getColuna()] = "*";
     }
     
+    /**
+     * Método para reirar a coordenada da matriz labirinto.
+     * 
+     * @param c classe do tipo coordenada
+     * @throws ArrayIndexOutOfBoundsException
+     * @throws ParametroNuloException 
+     */
     protected void tirarPosicao(Coordenada c) throws ArrayIndexOutOfBoundsException, ParametroNuloException
     {
         if(c == null)
@@ -232,6 +360,15 @@ public class Labirinto implements Cloneable {
         this.labirinto[c.getLinha()][c.getColuna()] = " ";
     }
     
+    /**
+     * Método que inicializa o processo de verificação das possibilidades.
+     * 
+     * @param atual
+     * @param possibilidades
+     * @param caminho
+     * @return
+     * @throws Exception 
+     */
     public boolean progressivo(Coordenada atual, Pilha<Fila<Coordenada>> possibilidades, Pilha<Coordenada> caminho) throws Exception
     {
         if(atual == null)
@@ -256,6 +393,15 @@ public class Labirinto implements Cloneable {
         return false;
     }
     
+    /**
+     * Método que inicializa o processo de verificação das possibilidades de maneira regressiva.
+     * 
+     * @param atual
+     * @param caminho
+     * @param possibilidades
+     * @return
+     * @throws Exception 
+     */
     public Coordenada regressiva(Coordenada atual, Pilha<Coordenada> caminho, Pilha<Fila<Coordenada>> possibilidades) throws Exception
     {
         Fila<Coordenada> fila = new Fila<Coordenada>(3);
@@ -271,6 +417,12 @@ public class Labirinto implements Cloneable {
         return fila.remove();
     }
     
+    /**
+     * Construtor para inicialização da classe.
+     * 
+     * @param modelo
+     * @throws Exception 
+     */
     public Labirinto(Labirinto modelo) throws Exception
     {
         if(modelo == null)
@@ -293,6 +445,11 @@ public class Labirinto implements Cloneable {
         this.tamLinha = modelo.tamLinha;
     }
     
+    /**
+     * Método para clona um objeto do tipo dessa classe.
+     * 
+     * @return Object
+     */
     public Object clone()
     {
         Labirinto ret = null;
@@ -306,6 +463,11 @@ public class Labirinto implements Cloneable {
         return ret;
     }
     
+    /**
+     * Este método serve para retornar um valor inteiro para identificar a classe.
+     * 
+     * @return 
+     */
     public int hashCode()
     {
         int ret = 999;
@@ -326,6 +488,11 @@ public class Labirinto implements Cloneable {
         return ret;
     }
     
+    /**
+     * Método serve paraprintar a classe
+     * 
+     * @return string
+     */
     public String toString()
     {
         String ret = "";
@@ -338,6 +505,12 @@ public class Labirinto implements Cloneable {
         return ret;
     }
     
+    /**
+     * Método de comparação
+     * 
+     * @param obj
+     * @return boolean
+     */
     public boolean equals(Object obj)
     {
         if(obj == null)
