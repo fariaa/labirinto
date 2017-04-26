@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 public class Pilha <X> implements Cloneable {
     protected int topo = -1;
     protected Object[] pilha;
-    protected Object ultimoElemento;
+    //protected Object ultimoElemento;
     
     /**
      * Construtor default 
@@ -69,10 +69,10 @@ public class Pilha <X> implements Cloneable {
     public X remove() throws Exception
     {
         Object item = this.pilha[this.topo];
-        if(this.pilha.length == 0)
-            throw new Exception("Pilha vazia");
+        //if(this.pilha.length == 0)
+          //  throw new Exception("Pilha vazia");
         
-        this.ultimoElemento = this.pilha[this.topo];
+        //this.ultimoElemento = this.pilha[this.topo];
         this.pilha[this.topo] = null;
 	this.topo--;	
         return (X)item;
@@ -95,8 +95,8 @@ public class Pilha <X> implements Cloneable {
      */
     public X recupera() throws Exception
     {
-        if(this.pilha.length == 0)
-            throw new Exception("Pilha vazia");
+        //if(this.pilha.length == 0)
+          //  throw new Exception("Pilha vazia");
         
 	return (X)pilha[this.topo];	
     }
@@ -143,13 +143,13 @@ public class Pilha <X> implements Cloneable {
      * @return Último elemento
      * @throws Exception 
      */
-    public X ultimoElementoRemovido() throws Exception
+    /*public X ultimoElementoRemovido() throws Exception
     {
         if(this.ultimoElemento == null)
             throw new Exception("Pilha sem elemento removido");
         
         return (X)this.ultimoElemento;
-    }
+    }*/
     /**
      * Método que printa o último elemento da pilha.
      * 
@@ -207,7 +207,7 @@ public class Pilha <X> implements Cloneable {
         
         ret = 7*ret + new Integer(this.topo).hashCode();
         
-        ret = 7*ret + this.ultimoElemento.hashCode();
+       // ret = 7*ret + this.ultimoElemento.hashCode();
 
         for (int i=0; i <= this.topo; i++)
             ret = 7*ret + this.pilha[i].hashCode();

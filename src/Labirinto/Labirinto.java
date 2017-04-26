@@ -36,7 +36,7 @@ public class Labirinto implements Cloneable {
      */
     public Labirinto() throws Exception
     {
-        this.lerArquivo("C:\\Users\\13255484\\Desktop\\labirinto.txt");
+        this.lerArquivo("C:\\Users\\Lucas\\Desktop\\labirinto\\lib\\6464.txt");
         this.lerTamanho();
         this.labirinto = new String[this.tamLinha][this.tamColuna];
         this.modelarMatriz();
@@ -283,8 +283,9 @@ public class Labirinto implements Cloneable {
         {
             if(atual.getColuna()+1 <= this.tamColuna-1)
             {
-                if(!(this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("#") 
-                   || this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("*")))
+                if(!(this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("#")) 
+                   && !(this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("*"))
+                   && !(this.labirinto[atual.getLinha()][atual.getColuna()+1].equals("E")))
                     fila.insere(new Coordenada(atual.getLinha(), atual.getColuna()+1));
             }
         }
@@ -292,13 +293,29 @@ public class Labirinto implements Cloneable {
         {
             
         }
-        //posição de cima
+        //posição de atras
+        try
+        {
+            if(atual.getColuna()-1 <= this.tamColuna-1)
+            {
+                if(!(this.labirinto[atual.getLinha()][atual.getColuna()-1].equals("#"))
+                   && !(this.labirinto[atual.getLinha()][atual.getColuna()-1].equals("*"))
+                   && !(this.labirinto[atual.getLinha()][atual.getColuna()-1].equals("E")))
+                    fila.insere(new Coordenada(atual.getLinha(), atual.getColuna()-1));
+            }
+        }
+        catch(Exception erro)
+        {
+            
+        }
+        //posição acima
         try
         {
             if(atual.getLinha()-1 <= this.tamLinha-1)
             {
-                if(!(this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("#")
-                   || this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("*")))
+                if(!(this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("#")) 
+                   && !(this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("*"))
+                   && !(this.labirinto[atual.getLinha()-1][atual.getColuna()].equals("E")))
                     fila.insere(new Coordenada(atual.getLinha()-1, atual.getColuna()));
             }
         }
@@ -306,13 +323,16 @@ public class Labirinto implements Cloneable {
         {
             
         }
+        
+        
         //posição de baixo
         try
         {
             if(atual.getLinha()+1 <= this.tamLinha-1)
             {
-                if(!(this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("#")
-                    || this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("*")))
+                if(!(this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("#"))
+                    && !(this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("*"))
+                    && !(this.labirinto[atual.getLinha()+1][atual.getColuna()].equals("E")))
                     fila.insere(new Coordenada(atual.getLinha()+1, atual.getColuna()));
             }
         }
@@ -408,11 +428,11 @@ public class Labirinto implements Cloneable {
         fila = possibilidades.remove();
         while(fila.vazia())
         {
-             System.out.println(this.toString());
+             //System.out.println(this.toString());
              atual = caminho.remove();
              this.tirarPosicao(atual);
              fila = possibilidades.remove();
-             
+             System.out.println(this.toString());
         }
         return fila.remove();
     }
