@@ -114,8 +114,11 @@ public class Labirinto implements Cloneable {
             }
         }
         
-        if(cont != 1) 
-            throw new Exception("nao pode ter duas entredas");
+        if(cont > 1) 
+            throw new Exception("nao pode ter duas entredas \n");
+        
+        if(cont == 0) 
+            throw new Exception("não foi encontrado, nenhuma entrada \n");
         
         this.entrada = ret;
     }
@@ -158,9 +161,11 @@ public class Labirinto implements Cloneable {
             }
         }
         
-        if(cont != 1) 
-            throw new Exception("nao pode ter mais de uma saida");
+        if(cont > 1) 
+            throw new Exception("nao pode ter mais de uma saida \n");
         
+        if(cont == 0)
+            throw new Exception("saida nao encontrada \n");
         this.saida = ret;
     }
     public Coordenada getEntrada() throws Exception

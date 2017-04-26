@@ -45,7 +45,14 @@ public class Principal {
                catch(SairDoLoopException err)
                {
                    System.out.println(err.getMessage());
-                   
+                   Pilha<Coordenada> cam = new Pilha<Coordenada>(caminho.size()); 
+                   while(!caminho.vazia())
+                   {
+                       cam.guarde(caminho.remove());
+                   }
+                   while(!cam.vazia())
+                      System.out.println((cam.remove()).toString());
+                  
                }
                catch(Exception ex)
                {
@@ -57,7 +64,7 @@ public class Principal {
        }
        catch(Exception ex)
        {
-           System.out.println("MSG: " + ex.getMessage());
+           System.out.print("MSG: " + ex.getMessage());
        }
         
     }

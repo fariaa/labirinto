@@ -16,7 +16,6 @@ public class Coordenada {
     protected String caminho;
     protected int linha;
     protected int coluna;
-    
             
     public Coordenada()
     {
@@ -82,5 +81,20 @@ public class Coordenada {
         {}
         
         return ret;
+    }
+    
+    public int hashCode()
+    {
+        int ret = 789;
+        ret = 9*ret + this.caminho.hashCode();
+        ret = 9*ret + new Integer(this.linha).hashCode();
+        ret = 9*ret + new Integer(this.coluna).hashCode();
+                
+        return ret;
+    }
+    
+    public String toString()
+    {
+        return ("("+this.linha+", "+this.coluna+")");
     }
 }
